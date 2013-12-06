@@ -68,7 +68,7 @@
     <script src="{!URLFOR($Resource.ProntoFrontEndContent_New_Testing, 'content/javascript/combined.min.js')}"></script>
     <script>    
     
-    
+   
     
     app.collapse = (function (api) {
 
@@ -138,7 +138,8 @@
 
         if(isAndroid) {
         
-        
+            if($(e.target).closest(".stat-chart").length > 0) {return;}
+
         
             var percentage = parseInt($(".header").css('height')) * 100/$(".header").height();
         
@@ -258,7 +259,6 @@
         
         // Quick fix for clicking within chart area
         
-        if($(e.target).closest(".stat-chart").length > 0) {return;}
         
         var runningHeight = header + cardHeader;
 
@@ -283,6 +283,8 @@
         
         
         //console.log("height before " + $(".js-template").height());
+        runningHeight = header + cardHeader;
+
 
         if (isAndroid) {
             $(".tabbar-section.tabbar-on .js-collapse").each(function() {
@@ -365,6 +367,9 @@
     return api;
 
 })(app.collapse || {});
+
+
+ 
     
     </script>
     <c:PlanetRed_JsTemplate_Test ChatterPost="{!ChatterPost}" />    
