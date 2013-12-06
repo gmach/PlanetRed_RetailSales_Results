@@ -111,6 +111,14 @@
     
     api.toggle = function(e){
         
+
+        function togglItemDisplay(item) {
+            item.removeClass("on");
+            api.toggle.classes(item);      
+            api.toggle.text(item);     
+            api.toggle.target(item);
+        }
+
         e.preventDefault();
         
         
@@ -208,11 +216,7 @@
 
                         var $itemTwo = $(this);
                         shouldCollapse =  $itemTwo.find('h3').html()==$item.find('h3').html();  //$item == $link;
-                        $itemTwo.removeClass("on");
-                        api.toggle.classes($itemTwo);      
-                        api.toggle.text($itemTwo);     
-                        api.toggle.target($itemTwo);
-            
+                        togglItemDisplay($itemTwo);
                     }); 
                     
                     if (shouldCollapse) {
@@ -227,10 +231,7 @@
                 
                     console.warn("should pop");
 
-                    $item.toggleClass("on");
-                    api.toggle.classes($item);      
-                    api.toggle.text($item);     
-                    api.toggle.target($item);
+                    togglItemDisplay($item);
                 }
                 $(".tabbar-section.tabbar-on .js-collapse").each(function() {
                     var $itemThree = $(this);
@@ -249,11 +250,7 @@
             $(".js-collapse.on").each(function() {
                 var $item = $(this);
                 shouldCollapse =  $link.find('h3').html()==$item.find('h3').html();  //$item == $link;
-                $item.removeClass("on");
-                api.toggle.classes($item);      
-                api.toggle.text($item);     
-                api.toggle.target($item);
-                
+                togglItemDisplay($item);                
             }); 
         }
         
@@ -272,14 +269,7 @@
             $(".item.card").css('height',runningHeight);
             return;
         }
-        $link.toggleClass("on");
-        api.toggle.classes($link);
-        
-        api.toggle.text($link);
-        
-        api.toggle.target($link);
-        
-        //api.toggle.similar($link);
+        togglItemDisplay($link);
         
         
         //console.log("height before " + $(".js-template").height());
