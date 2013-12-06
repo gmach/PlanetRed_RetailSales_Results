@@ -111,42 +111,23 @@
     
     api.toggle = function(e){
         
-
-        function togglItemDisplay(item) {
-            item.removeClass("on");
-            api.toggle.classes(item);      
-            api.toggle.text(item);     
-            api.toggle.target(item);
-        }
-
         e.preventDefault();
-        
-        
-        
+
         var $link = $(this);
         var shouldCollapse = false;
         var isCardopened = $(".js-collapse.on").length>0;
         var isScrolled = $(".cards").position().top < 60;
-        
-
-
-
 
         var bug = isCardopened && isScrolled;
         console.log('you bugger!' + bug);
         // Check if this is a touch gesture and the hand has moved too far (hence a swipe) then break out
         if(typeof e.gesture !== "undefined" && e.gesture.distance > 20){ return; }
-        
-        
-        
-        var topPosition = 0;
-        
 
-    
+        var topPosition = 0;
 
         if(isAndroid) {
         
-            if($(e.target).closest(".stat-chart").length > 0) {return;}
+            //if($(e.target).closest(".stat-chart").length > 0) {return;}
 
         
             var percentage = parseInt($(".header").css('height')) * 100/$(".header").height();
@@ -216,7 +197,11 @@
 
                         var $itemTwo = $(this);
                         shouldCollapse =  $itemTwo.find('h3').html()==$item.find('h3').html();  //$item == $link;
-                        togglItemDisplay($itemTwo);
+                        $itemTwo.removeClass("on");
+                        api.toggle.classes($itemTwo);      
+                        api.toggle.text($itemTwo);     
+                        api.toggle.target($itemTwo);
+            
                     }); 
                     
                     if (shouldCollapse) {
@@ -231,7 +216,10 @@
                 
                     console.warn("should pop");
 
-                    togglItemDisplay($item);
+                    $item.toggleClass("on");
+                    api.toggle.classes($item);      
+                    api.toggle.text($item);     
+                    api.toggle.target($item);
                 }
                 $(".tabbar-section.tabbar-on .js-collapse").each(function() {
                     var $itemThree = $(this);
@@ -239,6 +227,8 @@
 
                 }); 
                 $(".item.card").css('height',runningHeight);
+                    return;
+
                 return;
             }); 
 
@@ -250,7 +240,11 @@
             $(".js-collapse.on").each(function() {
                 var $item = $(this);
                 shouldCollapse =  $link.find('h3').html()==$item.find('h3').html();  //$item == $link;
-                togglItemDisplay($item);                
+                $item.removeClass("on");
+                api.toggle.classes($item);      
+                api.toggle.text($item);     
+                api.toggle.target($item);
+                
             }); 
         }
         
@@ -269,7 +263,14 @@
             $(".item.card").css('height',runningHeight);
             return;
         }
-        togglItemDisplay($link);
+        $link.toggleClass("on");
+        api.toggle.classes($link);
+        
+        api.toggle.text($link);
+        
+        api.toggle.target($link);
+        
+        //api.toggle.similar($link);
         
         
         //console.log("height before " + $(".js-template").height());
