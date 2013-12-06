@@ -1,0 +1,13 @@
+<apex:component >
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Planet Red | Retail Sales Results</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <script src="{!URLFOR($Resource.ProntoFrontEndContent_New_Testing, 'content/javascript/lib/modernizr.custom.js')}"></script>
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,700,300' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="{!URLFOR($Resource.ProntoFrontEndContent_New_Testing, 'content/css/app.css')}"/>
+    <link rel="apple-touch-icon-precomposed" href="{!URLFOR($Resource.ProntoFrontEndContent_New_Testing, 'content/images/brand/vodafonetouch.png')}" />
+    
+</apex:component>

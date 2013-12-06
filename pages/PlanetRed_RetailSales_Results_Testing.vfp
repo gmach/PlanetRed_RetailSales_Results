@@ -1,0 +1,377 @@
+<apex:page cache="true" showHeader="false" sidebar="false" standardStylesheets="false" controller="PlanetRedController">
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    
+<head>
+    <c:PlanetRed_Header_Testing /> 
+    <c:PlanetRed_WebAnalytics pageNameTracking="Planet Red | Retail Sales | Results" />
+
+</head>    
+<body class="menu-push">
+    <div id="container">
+        <div class="mp-pusher" id="mp-pusher">
+            <c:PlanetRed_RightMenu LevelObjectList="{!LevelObjectList}" />
+            <apex:variable var="loginUserId" value="{!$CurrentPage.parameters.loginUserId}" />
+            
+                
+            <c:PlanetRed_NavTop reportTitle="{!reportLevelTitle}"  loginUserId="{!$CurrentPage.parameters.loginUserId}" /> 
+            
+            <div id="content" class="content scroller hastabbar">           
+                <div id="cards" class="cards">
+                    <div class="tabbar-section {!IF(DisplayLastUpdatedDateTime == 'No data yet', 'tabbar-on', '')}" id="card-1">
+                        <c:PlanetRed_CardHeader title="Yesterday" selectedPageName="stats_yesterday" reportType="stats" />
+                        
+                        <section class="item card"> 
+                            <div class="js-template" data-template-name="tmpl-stats" 
+                            data-template-data="/apex/PlanetRed_JsonDataStats_Test?level={!reportLevel}&reportType=kpiReportYesterday{!IF(loginUserId != null, '&loginUserId=' + loginUserId, '')}" data-template-oncomplete="/chart/create/mini"></div>
+                        </section>
+                    </div>
+                    
+                    <div class="tabbar-section {!IF(DisplayLastUpdatedDateTime == 'No data yet', '', 'tabbar-on')}" id="card-2">
+                        <c:PlanetRed_CardHeader title="Today @ {!displayLastUpdatedDateTime}" selectedPageName="stats_today" reportType="stats" />
+                            <section class="item card"> 
+                                <div class="js-template" data-template-name="tmpl-stats" 
+                                data-template-data="/apex/PlanetRed_JsonDataStats_Test?level={!reportLevel}&reportType=kpiReportHourly{!IF(loginUserId != null, '&loginUserId=' + loginUserId, '')}" data-template-oncomplete="/chart/create/mini" style="height:300px"></div>
+                            </section> 
+                    </div>
+                    
+                    <div class="tabbar-section" id="card-3">
+                        <c:PlanetRed_CardHeader title="Rolling 7 Days" selectedPageName="stats_rolling" reportType="stats" />
+                        <section class="item card">
+                            <div class="js-template" data-template-name="tmpl-stats" data-template-data="/apex/PlanetRed_JsonDataStats_Test?level={!reportLevel}&reportType=kpiReport7Days{!IF(loginUserId != null, '&loginUserId=' + loginUserId, '')}" data-template-oncomplete="/chart/create/mini"></div>
+                        </section>  
+                    </div>
+                    
+                    <div class="tabbar-section" id="card-4">
+                        <c:PlanetRed_CardHeader title="Week to Date" selectedPageName="stats_week" reportType="stats" />
+                        <section class="item card">
+                            <div class="js-template" data-template-name="tmpl-stats" data-template-data="/apex/PlanetRed_JsonDataStats_Test?level={!reportLevel}&reportType=kpiReportWTD{!IF(loginUserId != null, '&loginUserId=' + loginUserId, '')}" data-template-oncomplete="/chart/create/mini"></div>
+                        </section>      
+                    </div>
+                    
+                    <div class="tabbar-section" id="card-5">    
+                        <c:PlanetRed_CardHeader title="Month to Date" selectedPageName="stats_month" reportType="stats" />
+                        <section class="item card">
+                            <div class="js-template" data-template-name="tmpl-stats" data-template-data="/apex/PlanetRed_JsonDataStats_Test?level={!reportLevel}&reportType=kpiReportMTD{!IF(loginUserId != null, '&loginUserId=' + loginUserId, '')}" data-template-oncomplete="/chart/create/mini"></div>
+                        </section>
+                    </div>              
+                </div>
+            </div>
+            <c:PlanetRed_Tabs OnTabNumber="{!IF(DisplayLastUpdatedDateTime == 'No data yet', 1, 2)}" />
+        </div>
+    </div>
+    <div class="md-overlay"></div>
+
+    <script src="{!URLFOR($Resource.ProntoFrontEndContent_New_Testing, 'content/javascript/combined.min.js')}"></script>
+    <script>    
+    
+    
+    
+    app.collapse = (function (api) {
+
+    var isAndroid = /Android/i.test(navigator.userAgent);
+    var config, pvt = {};
+    
+    
+    // private variables and functions
+    api.init = function () {
+        config = {
+            scrollContainer: ".owl-item"
+        };
+        pvt.setup();
+    };
+    
+    pvt.setup = function(){
+
+        pvt.links();
+        var runningHeight = 0;
+
+        $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+            var $item = $(this);
+            runningHeight += $item.parent().height();
+
+        }); 
+        $(".js-template").height(300);
+    };
+    
+    pvt.links = function(){
+        if(Modernizr.touch){
+            if(isAndroid) {
+                $(document.body).hammer().on("release", ".scroller", api.toggle);
+            } else {
+                $(document.body).hammer().on("release", ".js-collapse", api.toggle);
+            }
+        } else{
+            $(document.body).on("click", ".js-collapse", api.toggle);
+        }
+    };
+    
+    api.toggle = function(e){
+        
+        e.preventDefault();
+        
+        
+        
+        var $link = $(this);
+        var shouldCollapse = false;
+        var isCardopened = $(".js-collapse.on").length>0;
+        var isScrolled = $(".cards").position().top < 60;
+        
+
+
+
+
+        var bug = isCardopened && isScrolled;
+        console.log('you bugger!' + bug);
+        // Check if this is a touch gesture and the hand has moved too far (hence a swipe) then break out
+        if(typeof e.gesture !== "undefined" && e.gesture.distance > 20){ return; }
+        
+        
+        
+        var topPosition = 0;
+        
+
+    
+
+        if(isAndroid) {
+        
+        
+        
+            var percentage = parseInt($(".header").css('height')) * 100/$(".header").height();
+        
+        
+            topPosition = $(".cards").position().top*percentage/100;
+        
+        
+        
+            console.error("topPosition " + topPosition);
+        
+            console.error(".header = " + parseInt($(".header").css('height')));
+
+            console.error(".tabbar-section.tabbar-on .card-header = " + parseInt($(".tabbar-section.tabbar-on .card-header").css('height')));
+
+        
+            var header = parseInt($(".header").css('height'));
+            var cardHeader = parseInt($(".tabbar-section.tabbar-on .card-header").css('height'));
+        
+        
+            var touchPosition = e.gesture.touches[0].pageY;
+            var relativePosition = 0;
+            if(topPosition >= 0 ) {
+                
+                relativePosition =  touchPosition;
+            
+            } else {
+            
+                relativePosition =  touchPosition - topPosition;
+
+            }
+            var whichElement = 0; 
+            var runningItemHeight = header + cardHeader;
+            
+            $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+            
+                whichElement++;
+                var $runningItem = $(this);
+                console.error("relativePosition and  runningItemHeight " + topPosition + " " 
+                        + touchPosition + " " 
+                        + relativePosition + " " 
+                        + runningItemHeight+ " " 
+                        + (runningItemHeight + parseInt($runningItem.parent().css('height'))));
+
+                if(relativePosition > runningItemHeight && 
+                        relativePosition <= runningItemHeight + parseInt($runningItem.parent().css('height'))) {
+
+                    return false;
+                                
+                }
+
+                runningItemHeight += parseInt($runningItem.parent().css('height'));
+
+            });
+ 
+            console.warn("whichElement = " + whichElement);
+
+            $(".tabbar-section.tabbar-on .js-collapse").each(function(index) {
+            
+                if(index+1 == whichElement) {
+                
+                    var $item = $(this);
+                
+                    $(".js-collapse.on").each(function() {
+                    
+                       console.warn("should collapse");
+
+                        var $itemTwo = $(this);
+                        shouldCollapse =  $itemTwo.find('h3').html()==$item.find('h3').html();  //$item == $link;
+                        $itemTwo.removeClass("on");
+                        api.toggle.classes($itemTwo);      
+                        api.toggle.text($itemTwo);     
+                        api.toggle.target($itemTwo);
+            
+                    }); 
+                    
+                    if (shouldCollapse) {
+                        $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+                            var $itemThree = $(this);
+                            runningHeight += parseInt($itemThree.parent().css('height'));
+
+                        }); 
+                        $(".item.card").css('height',runningHeight);
+                        return;
+                    }
+                
+                    console.warn("should pop");
+
+                    $item.toggleClass("on");
+                    api.toggle.classes($item);      
+                    api.toggle.text($item);     
+                    api.toggle.target($item);
+                }
+                $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+                    var $itemThree = $(this);
+                    runningHeight += parseInt($itemThree.parent().css('height'));
+
+                }); 
+                $(".item.card").css('height',runningHeight);
+                return;
+            }); 
+
+       
+            return;
+        }
+        
+        if (isAndroid) {
+            $(".js-collapse.on").each(function() {
+                var $item = $(this);
+                shouldCollapse =  $link.find('h3').html()==$item.find('h3').html();  //$item == $link;
+                $item.removeClass("on");
+                api.toggle.classes($item);      
+                api.toggle.text($item);     
+                api.toggle.target($item);
+                
+            }); 
+        }
+        
+        // Quick fix for clicking within chart area
+        
+        if($(e.target).closest(".stat-chart").length > 0) {return;}
+        
+        var runningHeight = header + cardHeader;
+
+        // Add an on class if it doesnt have one already
+        if (shouldCollapse) {
+            $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+                var $item = $(this);
+                runningHeight += parseInt($item.parent().css('height'));
+
+            }); 
+            $(".item.card").css('height',runningHeight);
+            return;
+        }
+        $link.toggleClass("on");
+        api.toggle.classes($link);
+        
+        api.toggle.text($link);
+        
+        api.toggle.target($link);
+        
+        //api.toggle.similar($link);
+        
+        
+        //console.log("height before " + $(".js-template").height());
+
+        if (isAndroid) {
+            $(".tabbar-section.tabbar-on .js-collapse").each(function() {
+                var $item = $(this);
+                runningHeight += parseInt($item.parent().css('height'));
+
+            }); 
+        }
+        $(".item.card").css('height',runningHeight);
+
+        
+    };
+    
+    api.toggle.classes = function($link){
+    
+        // Check if we want to change the class, otherwise breakout
+        if(typeof $link.data("collapse-class") === "undefined"){ return; }  
+        
+        // Work out what we want to replace and with what
+        var classNames = $link.data("collapse-class").split(":");
+        
+        // If we are collapsing, flip the array
+        if(!$link.hasClass("on")){
+            classNames.reverse();
+        }
+        
+        $link.removeClass(classNames[0]).addClass(classNames[1]);
+        
+    };
+    
+    api.toggle.text = function($link){
+    
+        // Check if we want to change the text, otherwise breakout
+        if(typeof $link.data("collapse-text") === "undefined"){ return; }
+            
+        // Only set orig text the first time
+        if(typeof $link.data("collapse-orig-text") === "undefined"){
+            $link.data("collapse-orig-text", $link.text()); 
+        }
+        
+        // Now change the text
+        var text = ($link.text() === $link.data("collapse-text") ? $link.data("collapse-orig-text") : $link.data("collapse-text"));
+        $link.text(text);
+    };
+    
+    api.toggle.target = function($link){
+        
+        var target = $link.data("collapse"),
+            $container;
+        
+        // Check if we are looking for a class within the collapse container
+        if(target.substr(0,1) === "."){
+            $container = $link.closest(".js-collapse-core").find(target);
+        }
+        
+        // If we are looking for an id, look in the whole DOM
+        if(target.substr(0,1) === "#"){
+            $container = $(target);
+        }
+        
+        $container.toggleClass("collapsed");
+        
+        if($container.data("collapse-haschart") === true){
+            app.shout("/chart/create", [$container.find(".js-chart")]);
+        }
+
+    };
+    
+    api.toggle.similar = function($link){
+        
+        // Find other similar cards
+        if(typeof $link.data("collapse-other") === "undefined"){ return; }
+        
+        $("[data-collapse-other='" + $link.data("collapse-other") + "']").not($link).each(function(i, element){
+            api.toggle.target($(element));
+        });
+    };
+
+
+    return api;
+
+})(app.collapse || {});
+    
+    </script>
+    <c:PlanetRed_JsTemplate_Test ChatterPost="{!ChatterPost}" />    
+        
+</body>
+</html>
+
+
+
+</apex:page>
