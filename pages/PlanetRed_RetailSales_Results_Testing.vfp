@@ -91,10 +91,10 @@
 
         $(".tabbar-section.tabbar-on .js-collapse").each(function() {
             var $item = $(this);
-            runningHeight += $item.parent().height();
+            runningHeight += $item.parent().css('height');
 
         }); 
-        $(".js-template").height(300);
+        $(".js-template").css('height', runningHeight);
     };
     
     pvt.links = function(){
@@ -134,9 +134,7 @@
         
         
             topPosition = $(".cards").position().top*percentage/100;
-        
-        
-        
+
             console.error("topPosition " + topPosition);
         
             console.error(".header = " + parseInt($(".header").css('height')));
